@@ -18,16 +18,26 @@ app.use(express.static('public'));
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
-
+let urlencoded = app.use(express.urlencoded({extended:false}));
 
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
+//whoami
+app.route('/api/whoami')
+.get((req,res) =>{
+  console.log(req.headers);
+  res.send({
+    "ipaddress": req.ip,
+    "language": req.headers['accept-language'],
+    "software": req.headers['user-agent']
+  });
+})
 
-
+var port = process.env.PORT || 3000;
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(port, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
